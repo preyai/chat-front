@@ -2,6 +2,7 @@ import { PropsWithChildren, useEffect, useState } from "react"
 import { authContext } from "../contexts/authContext"
 import { app } from "../helpers/feathers"
 import Login from "./Login"
+import { USERS } from "../constants";
 
 const AuthProvider = (props: PropsWithChildren<{}>) => {
     const { children } = props
@@ -16,14 +17,16 @@ const AuthProvider = (props: PropsWithChildren<{}>) => {
     }, [])
 
     useEffect(() => {
-        if (user)
+        if (user) {
             setOpen(false)
+            app.service(USERS).find().then(r => console.log(r))
+        }
     }, [user])
 
     return (
         <Provider value={{ user, setUser }}>
             {children}
-            {/* <Login open={open} /> */}
+            <Login open={open} />
         </Provider >
     )
 }

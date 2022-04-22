@@ -1,10 +1,14 @@
-import { AccountCircle } from "@mui/icons-material"
+import AccountCircle from "@mui/icons-material/AccountCircle"
 import { AppBar, IconButton, Toolbar, Typography } from "@mui/material"
 // import { AccountCircle } from '@mui/icons-material';
 
-const Header = () => {
+interface HeaderProps {
+    width: number
+}
+
+const Header = ({ width }: HeaderProps) => {
     return (
-        <AppBar>
+        <AppBar sx={{ width: `calc(100% - ${width}px)`, ml: `${width}px` }}>
             <Toolbar>
                 <Typography sx={{ flexGrow: 1 }}>Чат</Typography>
                 <IconButton

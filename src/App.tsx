@@ -1,25 +1,28 @@
-import { Drawer, Container } from "@mui/material";
-import { useAuthContext } from "./hooks/useAuth";
+import { Drawer, Toolbar, Box, Tabs, Tab } from "@mui/material";
 import Header from "./components/Header";
+import { SyntheticEvent, useEffect, useState } from "react";
+import SideBar from "./components/SideBar";
+import { app } from "./helpers/feathers";
+
+
+const drawerWidth = 240;
+
 
 function App() {
-  const { user } = useAuthContext()
+  // const [users, setUsers] = useState([])
+  // useEffect(() => {
 
+  // }, [])
   return (
-    <div className="App">
-      <Container>
-        <Header />
-        <Drawer
-          sx={{
-            width: 200
-          }}
-          variant="permanent"
-        >
-          {user &&
-            user.nickname}
-        </Drawer>
-      </Container>
-    </div>
+    <Box sx={{ display: 'flex' }}>
+      <Header width={drawerWidth} />
+      <SideBar width={drawerWidth} />
+      <Box sx={{
+        flexGrow: 1
+      }}>
+
+      </Box>
+    </Box>
   );
 }
 

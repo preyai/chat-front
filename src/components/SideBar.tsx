@@ -2,6 +2,7 @@ import { Drawer, Toolbar, Tabs, Tab } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState, SyntheticEvent } from "react";
 import Chats from "./Chats";
+import Contacts from "./Contacts";
 
 interface SidebarProps {
     width: number
@@ -60,16 +61,18 @@ const SideBar = ({ width }: SidebarProps) => {
             }}
             variant="permanent"
         >
-            <Toolbar />
-            <Tabs value={tab} onChange={handleChange} variant='fullWidth'>
-                <Tab label="Чаты" {...a11yProps(0)} />
-                <Tab label="Контакты" {...a11yProps(1)} />
-            </Tabs>
+            <Toolbar>
+                <Tabs value={tab} onChange={handleChange} variant='fullWidth'>
+                    <Tab label="Чаты" {...a11yProps(0)} />
+                    <Tab label="Контакты" {...a11yProps(1)} />
+                </Tabs>
+            </Toolbar>
+
             <TabPanel value={tab} index={0}>
                 <Chats />
             </TabPanel>
             <TabPanel value={tab} index={1}>
-                Item Two
+                <Contacts />
             </TabPanel>
         </Drawer>
     )

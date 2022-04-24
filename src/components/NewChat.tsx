@@ -1,10 +1,11 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, List, ListItem, ListItemButton, ListItemText, TextField } from "@mui/material"
-import { useEffect, useState } from "react"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, List, ListItem, ListItemButton, ListItemText, Switch, TextField } from "@mui/material"
+import { ChangeEvent, useEffect, useState } from "react"
 import { createChat } from "../helpers/chats"
 
 const NewChat = () => {
     const [open, setOpen] = useState(false)
     const [theme, setTheme] = useState('')
+    const [isPrivate, setIsPrivate] = useState(false)
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -14,9 +15,19 @@ const NewChat = () => {
         setOpen(false);
     };
 
+    const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
+        setTheme(event.target.value)
+    };
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setIsPrivate(event.target.checked);
+    };
+
     const handleCreate = () => {
-        createChat(theme).then(handleClose)
+        createChat(theme, isPrivate).then(handleClose)
+        setTheme('')
     }
+
     return (
         <>
             <Button onClick={handleClickOpen} variant="contained" sx={{ mt: 'auto' }}>Новый чат</Button>
@@ -29,12 +40,14 @@ const NewChat = () => {
                     <TextField
                         autoFocus
                         value={theme}
-                        onChange={e => setTheme(e.target.value)}
+                        onChange={handleInput}
                         id="theme"
                         label="Тема"
                         type="text"
                         fullWidth
+                        sx={{ my: 2 }}
                     />
+                    <FormControlLabel control={<Switch value={isPrivate} onChange={handleChange} />} label="Приватный режим" />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Отмена</Button>

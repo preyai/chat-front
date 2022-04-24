@@ -17,10 +17,8 @@ const AuthProvider = (props: PropsWithChildren<{}>) => {
     }, [])
 
     useEffect(() => {
-        if (user) {
+        if (user)
             setOpen(false)
-            app.service(USERS).find().then(r => console.log(r))
-        }
     }, [user])
 
     return (

@@ -1,8 +1,9 @@
 import io from 'socket.io-client';
 import feathers from '@feathersjs/client';
+import {SERVER} from "../constants";
 
 // Socket.io is exposed as the `io` global.
-const socket = io('http://localhost:3030');
+const socket = io(SERVER);
 // @feathersjs/client is exposed as the `feathers` global.
 const app = feathers()
 

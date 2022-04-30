@@ -3,8 +3,8 @@ import {MESSAGES} from "../constants";
 
 const messagesService = app.service(MESSAGES)
 
-const getMessages = async (chatId:string) => {
-    const response = await messagesService.find({query:{chat:chatId, $sort:{createdAt: -1}}})
+const getMessages = async (chatId:string, skip:number = 0) => {
+    const response = await messagesService.find({query:{chat:chatId, $skip:skip, $sort:{createdAt: -1}}})
     return response
 }
 

@@ -1,8 +1,8 @@
 import { PropsWithChildren, useEffect, useState } from "react"
-import { authContext } from "../contexts/authContext"
-import { app } from "../helpers/feathers"
-import Login from "./Login"
-import { USERS } from "../constants";
+import { authContext } from "../../contexts/authContext"
+import { app } from "../../helpers/feathers"
+import Login from "../Login"
+import { USERS } from "../../constants";
 
 const AuthProvider = (props: PropsWithChildren<{}>) => {
     const { children } = props

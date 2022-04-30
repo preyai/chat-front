@@ -84,7 +84,6 @@ const ChatListItem = ({ chatId }: ChatListItemProps) => {
                     <ListItemButton onClick={handler}>
                         <Badge
                             color="secondary"
-                            // badgeContent={' '}
                             variant='dot'
                             invisible={!newMessage}
                         >

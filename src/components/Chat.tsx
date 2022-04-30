@@ -4,7 +4,7 @@ import { useChat } from "../hooks/chats";
 import { useMessages } from "../hooks/messages";
 import NewMessage from "./NewMessage";
 import { IMessage } from "../interfaces/services";
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState,UIEvent } from "react";
 import moment from "moment";
 import 'moment/locale/ru';
 
@@ -17,14 +17,27 @@ interface MessageProps {
 }
 
 const Chat = ({ chatId }: ChatProps) => {
-    const messages = useMessages(chatId)
-    const scrollRef = useRef<HTMLLIElement>(null)
+    const {messages, loadMessages, isLoad} = useMessages(chatId)
+    const scrollRef = useRef<HTMLUListElement>(null)
+    const [height,setHeight] = useState<number|undefined>(undefined)
 
     useEffect(() => {
         if (scrollRef.current) {
-            scrollRef.current.scrollIntoView();
+            if (!height)
+                scrollRef.current.scrollTo({top:scrollRef.current.scrollHeight});
+            else {
+                scrollRef.current.scrollTo({top: scrollRef.current.scrollHeight - height})
+                setHeight(undefined)
+            }
         }
     }, [messages]);
+
+    const scrollHandler = (e: UIEvent<HTMLUListElement>) => {
+        if (e.currentTarget.scrollTop === 0 && !height) {
+            setHeight(e.currentTarget.scrollHeight)
+            loadMessages()
+        }
+    }
 
     return (
         <Box sx={{
@@ -34,11 +47,14 @@ const Chat = ({ chatId }: ChatProps) => {
             flexDirection: 'column',
             overflow: 'hidden'
         }}>
-            <List sx={{ flex: 1, overflow: 'auto' }}>
+            <List
+                onScroll={scrollHandler}
+                ref={scrollRef}
+                sx={{ flex: 1, overflow: 'auto' }}
+            >
                 {messages.map((message) => (
                     <Message message={message} key={message._id} />
                 ))}
-                <li ref={scrollRef} />
             </List>
             <NewMessage chat={chatId} />
         </Box>
@@ -71,30 +87,32 @@ const Message = ({ message }: MessageProps) => {
                     alt={message.user.nickname}
                     src={message.user.avatar}
                 />
-                <Popover
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'left',
-                    }}
-                    open={open}
-                    anchorEl={anchorEl}
-                    onClose={handlePopoverClose}
-                    disableRestoreFocus
-                >
-                    <Typography sx={{ p: 1 }}>{message.user.nickname}</Typography>
-                </Popover>
+
             </ListItemAvatar>
+            <Popover
+                id="mouse-over-popover"
+                sx={{
+
+                    pointerEvents: 'none',
+                }}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handlePopoverClose}
+                // disableRestoreFocus
+            >
+                <Typography sx={{p: 1}}>{message.user.nickname}</Typography>
+            </Popover>
             <ListItemText
                 primary={message.text}
                 secondary={moment(message.createdAt).locale('ru').calendar()}
             />
 
         </ListItem>
-    )
+    );
 }
 
 export default Chat

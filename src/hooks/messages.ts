@@ -5,6 +5,8 @@ import {getMessages, messagesService} from "../helpers/messages";
 
 const useMessages = (id: string) => {
     const [messages, setMessages] = useState<IMessage[]>([])
+    const [total,setTotal] = useState(1)
+    const [isLoad,setIsLoad] = useState(false)
 
     const listener = useCallback((message:IMessage)=>{
         if (message.chat === id)
@@ -17,7 +19,7 @@ const useMessages = (id: string) => {
 
     useEffect(() => {
         messagesService.removeListener('created',listener)
-        getMessages(id).then(r => setMessages(r.data.sort(sort)))
+        loadMessages()
         messagesService.on('created', listener)
         return () => {
             messagesService.removeListener('created',listener)
@@ -32,7 +34,20 @@ const useMessages = (id: string) => {
         return 0
     }
 
-    return messages
+    const loadMessages = () => {
+        if (messages.length < total && !isLoad) {
+            setIsLoad(true)
+            getMessages(id, messages.length).then(r => {
+                setTotal(r.total)
+                setMessages((prev) => {
+                    return [...prev, ...r.data].sort(sort);
+                })
+                setIsLoad(false)
+            });
+        }
+    }
+
+    return {messages, loadMessages,isLoad}
 }
 
 export {useMessages}

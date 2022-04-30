@@ -18,7 +18,14 @@ const NewMessage = ({chat}:NewMessageProps) => {
 
     return (
         <Box sx={{display: 'flex'}}>
-            <TextField value={text} onChange={changeText} label="Сообщение" variant="standard" fullWidth={true}/>
+            <TextField
+                value={text}
+                onChange={changeText}
+                onKeyUp={(event)=> event.key === "Enter" && send()}
+                label="Сообщение"
+                variant="standard"
+                fullWidth={true}
+            />
             <Button onClick={send} variant="outlined">Отправить</Button>
         </Box>
     )
